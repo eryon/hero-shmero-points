@@ -1,0 +1,36 @@
+{
+  "id": "hero-shmero-points",
+  "title": "PF2e Hero Shmero Points",
+  "description": "A module to customize the name and display of hero points",
+  "version": "0.1.0",
+  "authors": [
+    {
+      "name": "anathemort",
+      "discord": "anathemort"
+    }
+  ],
+  "compatibility": {
+    "minimum": "12",
+    "verified": "12.331"
+  },
+  "bugs": "https://github.com/eryon/hero-shmero-points/issues",
+  "changelog": "https://github.com/eryon/hero-shmero-points/blob/main/CHANGELOG.md",
+  "download": "https://github.com/eryon/hero-shmero-points/releases/download",
+  "esmodules": [
+    "scripts/index.js"
+  ],
+  "license": "https://github.com/eryon/hero-shmero-points/blob/main/LICENSE",
+  "manifest": "https://github.com/eryon/hero-shmero-points/releases/latest/download/module.json",
+  "readme": "https://github.com/eryon/hero-shmero-points/blob/main/README.md",
+  "relationships": {
+    "systems": {
+      "id": "pf2e",
+      "type": "system",
+      "compatibility": {
+        "minimum": "6.0.0",
+        "verified": "6.3.1"
+      }
+    }
+  },
+  "url": "https://github.com/eryon/hero-shmero-points"
+}
