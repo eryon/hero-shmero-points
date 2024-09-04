@@ -22,7 +22,7 @@ Hooks.once('init', () => {
   });
   game.settings.register(MODULE_ID, 'HeroPointIcon', {
     name: 'Icon',
-    hint: 'Enter a FontAwesome icon name to use in place of the standard (H) symbol. Find one at https://fontawesome.com/search',
+    hint: 'Enter a FontAwesome icon name to use in place of the standard (H) symbol, such as "fa-circle-v" to represent Villain Points. Find one at https://fontawesome.com/search',
     default: defaults.heroPointIcon,
     config: true,
     requiresReload: true,
