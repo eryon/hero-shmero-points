@@ -1,24 +1,25 @@
 export const MODULE_ID = 'hero-shmero-points';
 
-const defaults = {
-  heroPointIcon: 'fa-hospital-symbol',
-  system: {
-    HeroPointRatio: { Many: '', One: '' },
-    HeroPointsLabel: '',
-    RerollMenu: { HeroPoint: '', MessageHeroPoint: '', WarnNoHeroPoint: '' }
-  },
-  modules: [{ 'pf2e-hud': {} }, { 'xdy-pf2e-workbench': { SETTINGS: { heroPointHandler: {} } } }]
-};
+const defaults = { heroPointIcon: 'fa-hospital-symbol' };
 
 Hooks.once('init', () => {
-  game.settings.register(MODULE_ID, 'HeroPointsLabel', {
-    name: 'Label',
-    hint: 'Enter the *singular* name or label you want to use for hero points',
+  game.settings.register(MODULE_ID, 'HeroPointLabelSingular', {
+    name: 'Singular Label',
+    hint: 'Enter the *singular* name or label you want to use for a "Hero Point"',
+    default: 'Hero Point',
     config: true,
     requiresReload: true,
     scope: 'world',
-    type: String,
-    onChange: applyLabelChange
+    type: String
+  });
+  game.settings.register(MODULE_ID, 'HeroPointLabelPlural', {
+    name: 'Plural Label',
+    hint: 'Enter the *plural* label to use in instances of many "Hero Points"',
+    default: 'Hero Points',
+    config: true,
+    requiresReload: true,
+    scope: 'world',
+    type: String
   });
   game.settings.register(MODULE_ID, 'HeroPointIcon', {
     name: 'Icon',
@@ -29,11 +30,20 @@ Hooks.once('init', () => {
     scope: 'world',
     type: String
   });
+  game.settings.register(MODULE_ID, 'UseArticleAn', {
+    name: 'Use indefinite article "an"',
+    hint: 'When replacing the hero point label, also replace "a" with "an", so that "a Hero Point" becomes "an Hero Point"',
+    default: false,
+    config: true,
+    requiresReload: true,
+    scope: 'world',
+    type: Boolean
+  });
 });
 
 Hooks.once('i18nInit', () => {
   loadDefaults();
-  applyLabelChange(game.settings.get(MODULE_ID, 'HeroPointsLabel'));
+  applyLabelChanges();
 });
 
 Hooks.once('getChatLogEntryContext', (html, opts) => {
@@ -70,33 +80,32 @@ Hooks.once('setup', async () => {
   );
 });
 
-function applyLabelChange(value) {
-  foundry.utils.mergeObject(
-    game.i18n.translations.PF2E,
-    !!value ? createObjChange(defaults.system, value) : defaults.system
-  );
+function applyLabelChanges() {
+  const singular = getLabel('HeroPointLabelSingular');
+  const plural = getLabel('HeroPointLabelPlural');
+  const useAn = game.settings.get(MODULE_ID, 'UseArticleAn');
 
-  Object.entries(defaults.modules).forEach(([k, v]) => {
-    if (game.modules.find((x) => x.id === k)?.active) {
-      foundry.utils.mergeObject(game.i18n.translations[k], !!value ? createObjChange(v, value) : v);
-    }
-  });
+  applyObjectChanges(game.i18n.translations, { singular, plural, useAn });
 }
 
-function createObjChange(obj, value) {
-  return Object.entries(obj).reduce((res, [k, v]) => {
-    if (typeof v === 'string') {
-      return {
-        ...res,
-        [k]: v.replace('Hero Point', value)
-      };
-    }
+function applyObjectChanges(obj, labels) {
+  const { singular, plural, useAn } = labels;
 
-    return {
-      ...res,
-      [k]: createObjChange(v, value)
-    };
-  }, {});
+  return Object.entries(obj).forEach(([k, v]) => {
+    if (typeof v === 'string') {
+      if (v.includes(defaults.HeroPointLabelPlural)) {
+        obj[k] = v.replace(defaults.HeroPointLabelPlural, plural);
+      } else if (v.includes(defaults.HeroPointLabelSingular)) {
+        if (useAn && new RegExp(`a ${defaults.HeroPointLabelSingular}`).test(v)) {
+          obj[k] = v.replace(`a ${defaults.HeroPointLabelSingular}`, `an ${singular}`);
+        } else {
+          obj[k] = v.replace(defaults.HeroPointLabelSingular, singular);
+        }
+      }
+    } else {
+      applyObjectChanges(v, labels);
+    }
+  });
 }
 
 function getIconName() {
@@ -108,20 +117,15 @@ function getIconName() {
   return value;
 }
 
-function loadDefaults() {
-  defaults.system = {
-    HeroPointRatio: { ...game.i18n.translations.PF2E.HeroPointRatio },
-    HeroPointsLabel: game.i18n.translations.PF2E.HeroPointsLabel,
-    RerollMenu: { ...game.i18n.translations.PF2E.RerollMenu }
-  };
+function getLabel(key) {
+  const value = game.settings.get(MODULE_ID, key);
 
-  if (game.modules.find((x) => x.id === 'xdy-pf2e-workbench')?.active) {
-    defaults.modules['xdy-pf2e-workbench'] = {
-      SETTINGS: {
-        heroPointHandler: {
-          ...game.i18n.translations['xdy-pf2e-workbench'].SETTINGS.heroPointHandler
-        }
-      }
-    };
-  }
+  if (!value) return defaults[key];
+
+  return value;
+}
+
+function loadDefaults() {
+  defaults.HeroPointLabelSingular = game.i18n.translations[MODULE_ID].HeroPointLabelSingular;
+  defaults.HeroPointLabelPlural = game.i18n.translations[MODULE_ID].HeroPointLabelPlural;
 }
