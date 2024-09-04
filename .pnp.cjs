@@ -28,7 +28,6 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./",\
         "packageDependencies": [\
           ["esbuild", "npm:0.23.1"],\
-          ["lodash", "npm:4.17.21"],\
           ["prettier", "npm:3.3.3"],\
           ["prompts", "npm:2.4.2"],\
           ["vite", "virtual:203ed6d909a7659ce68b52fe580d56eb6d8368f4ff6b730f6502f8dcc968600cfa73904838f63d094c8e5cd75182dcf4401d2fbc6aa9707a275a1b14d138394b#npm:5.4.2"]\
@@ -992,7 +991,6 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["hero-shmero-points", "workspace:."],\
           ["esbuild", "npm:0.23.1"],\
-          ["lodash", "npm:4.17.21"],\
           ["prettier", "npm:3.3.3"],\
           ["prompts", "npm:2.4.2"],\
           ["vite", "virtual:203ed6d909a7659ce68b52fe580d56eb6d8368f4ff6b730f6502f8dcc968600cfa73904838f63d094c8e5cd75182dcf4401d2fbc6aa9707a275a1b14d138394b#npm:5.4.2"]\
@@ -1129,15 +1127,6 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "../../../.yarn/berry/cache/kleur-npm-3.0.3-f6f53649a4-10c0.zip/node_modules/kleur/",\
         "packageDependencies": [\
           ["kleur", "npm:3.0.3"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["lodash", [\
-      ["npm:4.17.21", {\
-        "packageLocation": "../../../.yarn/berry/cache/lodash-npm-4.17.21-6382451519-10c0.zip/node_modules/lodash/",\
-        "packageDependencies": [\
-          ["lodash", "npm:4.17.21"]\
         ],\
         "linkType": "HARD"\
       }]\
