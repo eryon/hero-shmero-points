@@ -4,6 +4,10 @@
       "Hero": {
         "LabelSingular": "Hero Point",
         "LabelPlural": "Hero Points"
+      },
+      "Mythic": {
+        "LabelSingular": "Mythic Point",
+        "LabelPlural": "Mythic Points"
       }
     },
     "Settings": {
@@ -19,6 +23,19 @@
         "IconHint": "Enter a FontAwesome icon name to use in place of the standard (H) symbol, such as \"fa-circle-v\" to represent Villain Points. Find one at https://fontawesome.com/search",
         "UseAnName": "Use indefinite article \"an\"",
         "UseAnHint": "When replacing the hero point label, also replace \"a\" with \"an\", so that \"a Hero Point\" becomes \"an Hero Point\""
+      },
+      "Mythic": {
+        "MenuName": "Mythic Points",
+        "MenuBtnLabel": "Change Mythic Point Labels",
+        "MenuHint": "Make adjustments to the Mythic Point labels and iconography",
+        "SingularName": "Singular Label for a Mythic Point",
+        "SingularHint": "Enter the *singular* name or label you want to use for a \"Mythic Point\"",
+        "PluralName": "Plural Label for Mythic Points",
+        "PluralHint": "Enter the *plural* label to use in instances of many \"Mythic Points\"",
+        "IconName": "Mythic Point Icon",
+        "IconHint": "Enter a FontAwesome icon name to use in place of the standard (M) symbol, such as \"fa-circle-v\" to represent Villain Points. Find one at https://fontawesome.com/search",
+        "UseAnName": "Use indefinite article \"an\"",
+        "UseAnHint": "When replacing the mythic point label, also replace \"a\" with \"an\", so that \"a Mythic Point\" becomes \"an Mythic Point\""
       }
     }
   }

@@ -1,4 +1,5 @@
 import { HeroPointSettings } from './apps/hero-settings';
+import { MythicPointSettings } from './apps/mythic-settings';
 import { applyMigrations } from './migrations/migrations';
 
 export const MODULE_ID = 'hero-shmero-points';
@@ -6,6 +7,9 @@ export const MODULE_ID = 'hero-shmero-points';
 const defaults = {
   HeroPoints: {
     Icon: 'fa-hospital-symbol'
+  },
+  MythicPoints: {
+    Icon: 'fa-circle-m'
   }
 };
 
@@ -14,10 +18,21 @@ Hooks.once('init', () => {
     name: `${MODULE_ID}.Settings.Hero.MenuName`,
     hint: `${MODULE_ID}.Settings.Hero.MenuHint`,
     label: `${MODULE_ID}.Settings.Hero.MenuBtnLabel`,
+    icon: `fa-solid ${defaults.HeroPoints.Icon}`,
     type: HeroPointSettings,
     restricted: true
   });
   HeroPointSettings.registerSettings();
+
+  game.settings.registerMenu(MODULE_ID, 'MythicPoints', {
+    name: `${MODULE_ID}.Settings.Mythic.MenuName`,
+    hint: `${MODULE_ID}.Settings.Mythic.MenuHint`,
+    label: `${MODULE_ID}.Settings.Mythic.MenuBtnLabel`,
+    icon: `fa-solid ${defaults.MythicPoints.Icon}`,
+    type: MythicPointSettings,
+    restricted: true
+  });
+  MythicPointSettings.registerSettings();
 });
 
 Hooks.once('ready', async () => applyMigrations());
@@ -31,24 +46,38 @@ Hooks.once('getChatLogEntryContext', (html, opts) => {
   const opt = opts.find((e) => e.name === 'PF2E.RerollMenu.HeroPoint');
   if (!opt) return;
 
-  foundry.utils.mergeObject(opt, { icon: opt.icon.replace(defaults.HeroPoints.Icon, getIconName()) });
+  const mythic = game.pf2e.settings.campaign.mythic !== 'disabled';
+
+  foundry.utils.mergeObject(opt, {
+    icon: opt.icon.replace(mythic ? defaults.MythicPoints.Icon : defaults.HeroPoints.Icon, getIconName())
+  });
 });
 
 Hooks.on('renderCharacterSheetPF2e', () => {
+  const mythic = game.pf2e.settings.campaign.mythic !== 'disabled';
+  const icon = mythic ? defaults.MythicPoints.Icon : defaults.HeroPoints.Icon;
+  const elements = document.querySelectorAll(`.sheet.actor.character i.${icon}`);
   const value = getIconName();
 
-  for (const el of document.querySelectorAll(`.sheet.actor.character i.${defaults.HeroPoints.Icon}`)) {
-    el.classList.replace(defaults.HeroPoints.Icon, value);
+  for (const el of elements) {
+    el.classList.replace(icon, value);
   }
 });
 
 Hooks.on('renderChatMessage', (message, html) => {
-  html.find(`i.${defaults.HeroPoints.Icon}`).first().removeClass(defaults.HeroPoints.Icon).addClass(getIconName());
+  const mythic = game.pf2e.settings.campaign.mythic !== 'disabled';
+  const icon = mythic ? defaults.MythicPoints.Icon : defaults.HeroPoints.Icon;
+
+  html.find(`i.${icon}`).first().removeClass(icon).addClass(getIconName());
 });
 
 Hooks.on('renderPF2eHudBaseActor', (html) => {
-  const el = html.element.querySelector('div[data-section="hero-points"] i.fa-circle-h');
-  el?.classList.replace('fa-circle-h', getIconName());
+  const mythic = game.pf2e.settings.campaign.mythic !== 'disabled';
+  const section = mythic ? 'mythic-points' : 'hero-points';
+  const icon = mythic ? 'fa-circle-m' : 'fa-circle-h';
+
+  const el = html.element.querySelector(`div[data-section="${section}"] i.${icon}`);
+  el?.classList.replace(icon, getIconName());
 });
 
 Hooks.once('setup', async () => {
@@ -62,27 +91,35 @@ Hooks.once('setup', async () => {
 });
 
 function applyLabelChanges() {
-  const singular = getLabel('LabelSingular');
-  const plural = getLabel('LabelPlural');
-  const useAn = game.settings.get(MODULE_ID, 'HeroPoints.UseArticleAn');
+  applyObjectChanges(game.i18n.translations, {
+    defaults: defaults.HeroPoints,
+    singular: game.settings.get(MODULE_ID, `HeroPoints.LabelSingular`) ?? defaults.HeroPoints.LabelSingular,
+    plural: game.settings.get(MODULE_ID, `HeroPoints.LabelPlural`) ?? defaults.HeroPoints.LabelPlural,
+    useAn: game.settings.get(MODULE_ID, 'HeroPoints.UseArticleAn')
+  });
 
-  applyObjectChanges(game.i18n.translations, { singular, plural, useAn });
+  applyObjectChanges(game.i18n.translations, {
+    defaults: defaults.MythicPoints,
+    singular: game.settings.get(MODULE_ID, `MythicPoints.LabelSingular`) ?? defaults.MythicPoints.LabelSingular,
+    plural: game.settings.get(MODULE_ID, `MythicPoints.LabelPlural`) ?? defaults.MythicPoints.LabelPlural,
+    useAn: game.settings.get(MODULE_ID, 'MythicPoints.UseArticleAn')
+  });
 }
 
 function applyObjectChanges(obj, labels) {
-  const { singular, plural, useAn } = labels;
+  const { defaults, singular, plural, useAn } = labels;
 
   return Object.entries(obj).forEach(([k, v]) => {
     if (k === MODULE_ID) return;
 
     if (typeof v === 'string') {
-      if (v.includes(defaults.HeroPoints.LabelPlural)) {
-        obj[k] = v.replace(defaults.HeroPoints.LabelPlural, plural);
-      } else if (v.includes(defaults.HeroPoints.LabelSingular)) {
-        if (useAn && new RegExp(`a ${defaults.HeroPoints.LabelSingular}`).test(v)) {
-          obj[k] = v.replace(`a ${defaults.HeroPoints.LabelSingular}`, `an ${singular}`);
+      if (v.includes(defaults.LabelPlural)) {
+        obj[k] = v.replace(defaults.LabelPlural, plural);
+      } else if (v.includes(defaults.LabelSingular)) {
+        if (useAn && new RegExp(`a ${defaults.LabelSingular}`).test(v)) {
+          obj[k] = v.replace(`a ${defaults.LabelSingular}`, `an ${singular}`);
         } else {
-          obj[k] = v.replace(defaults.HeroPoints.LabelSingular, singular);
+          obj[k] = v.replace(defaults.LabelSingular, singular);
         }
       }
     } else {
@@ -92,23 +129,11 @@ function applyObjectChanges(obj, labels) {
 }
 
 function getIconName() {
-  let value = game.settings.get(MODULE_ID, 'HeroPoints.Icon');
-
-  if (!value) value = defaults.heroPointIcon;
-  else if (!value.startsWith('fa-')) value = `fa-${value}`;
-
-  return value;
-}
-
-function getLabel(key) {
   const mythic = game.pf2e.settings.campaign.mythic !== 'disabled';
-  let value;
+  let value = game.settings.get(MODULE_ID, mythic ? 'MythicPoints.Icon' : 'HeroPoints.Icon');
 
-  if (mythic) {
-    value = game.settings.get(MODULE_ID, `HeroPoints.${key}`) ?? defaults.MythicPoints[key];
-  } else {
-    value = game.settings.get(MODULE_ID, `HeroPoints.${key}`) ?? defaults.HeroPoints[key];
-  }
+  if (!value) value = mythic ? defaults.MythicPoints.Icon : defaults.HeroPoints.Icon;
+  else if (!value.startsWith('fa-')) value = `fa-${value}`;
 
   return value;
 }
@@ -116,4 +141,7 @@ function getLabel(key) {
 function loadDefaults() {
   defaults.HeroPoints.LabelSingular = game.i18n.translations[MODULE_ID].Defaults.Hero.LabelSingular;
   defaults.HeroPoints.LabelPlural = game.i18n.translations[MODULE_ID].Defaults.Hero.LabelPlural;
+
+  defaults.MythicPoints.LabelSingular = game.i18n.translations[MODULE_ID].Defaults.Mythic.LabelSingular;
+  defaults.MythicPoints.LabelPlural = game.i18n.translations[MODULE_ID].Defaults.Mythic.LabelPlural;
 }
