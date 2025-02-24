@@ -1,6 +1,25 @@
 {
   "hero-shmero-points": {
-    "HeroPointLabelSingular": "Hero Point",
-    "HeroPointLabelPlural": "Hero Points"
+    "Defaults": {
+      "Hero": {
+        "LabelSingular": "Hero Point",
+        "LabelPlural": "Hero Points"
+      }
+    },
+    "Settings": {
+      "Hero": {
+        "MenuName": "Hero Points",
+        "MenuBtnLabel": "Change Hero Point Labels",
+        "MenuHint": "Make adjustments to the Hero Point labels and iconography",
+        "SingularName": "Singular Label for a Hero Point",
+        "SingularHint": "Enter the *singular* name or label you want to use for a \"Hero Point\"",
+        "PluralName": "Plural Label for Hero Points",
+        "PluralHint": "Enter the *plural* label to use in instances of many \"Hero Points\"",
+        "IconName": "Hero Point Icon",
+        "IconHint": "Enter a FontAwesome icon name to use in place of the standard (H) symbol, such as \"fa-circle-v\" to represent Villain Points. Find one at https://fontawesome.com/search",
+        "UseAnName": "Use indefinite article \"an\"",
+        "UseAnHint": "When replacing the hero point label, also replace \"a\" with \"an\", so that \"a Hero Point\" becomes \"an Hero Point\""
+      }
+    }
   }
 }

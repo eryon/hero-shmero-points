@@ -1,45 +1,26 @@
+import { HeroPointSettings } from './apps/hero-settings';
+import { applyMigrations } from './migrations/migrations';
+
 export const MODULE_ID = 'hero-shmero-points';
 
-const defaults = { heroPointIcon: 'fa-hospital-symbol' };
+const defaults = {
+  HeroPoints: {
+    Icon: 'fa-hospital-symbol'
+  }
+};
 
 Hooks.once('init', () => {
-  game.settings.register(MODULE_ID, 'HeroPointLabelSingular', {
-    name: 'Singular Label',
-    hint: 'Enter the *singular* name or label you want to use for a "Hero Point"',
-    default: 'Hero Point',
-    config: true,
-    requiresReload: true,
-    scope: 'world',
-    type: String
+  game.settings.registerMenu(MODULE_ID, 'HeroPoints', {
+    name: `${MODULE_ID}.Settings.Hero.MenuName`,
+    hint: `${MODULE_ID}.Settings.Hero.MenuHint`,
+    label: `${MODULE_ID}.Settings.Hero.MenuBtnLabel`,
+    type: HeroPointSettings,
+    restricted: true
   });
-  game.settings.register(MODULE_ID, 'HeroPointLabelPlural', {
-    name: 'Plural Label',
-    hint: 'Enter the *plural* label to use in instances of many "Hero Points"',
-    default: 'Hero Points',
-    config: true,
-    requiresReload: true,
-    scope: 'world',
-    type: String
-  });
-  game.settings.register(MODULE_ID, 'HeroPointIcon', {
-    name: 'Icon',
-    hint: 'Enter a FontAwesome icon name to use in place of the standard (H) symbol, such as "fa-circle-v" to represent Villain Points. Find one at https://fontawesome.com/search',
-    default: defaults.heroPointIcon,
-    config: true,
-    requiresReload: true,
-    scope: 'world',
-    type: String
-  });
-  game.settings.register(MODULE_ID, 'UseArticleAn', {
-    name: 'Use indefinite article "an"',
-    hint: 'When replacing the hero point label, also replace "a" with "an", so that "a Hero Point" becomes "an Hero Point"',
-    default: false,
-    config: true,
-    requiresReload: true,
-    scope: 'world',
-    type: Boolean
-  });
+  HeroPointSettings.registerSettings();
 });
+
+Hooks.once('ready', async () => applyMigrations());
 
 Hooks.once('i18nInit', () => {
   loadDefaults();
@@ -50,19 +31,19 @@ Hooks.once('getChatLogEntryContext', (html, opts) => {
   const opt = opts.find((e) => e.name === 'PF2E.RerollMenu.HeroPoint');
   if (!opt) return;
 
-  foundry.utils.mergeObject(opt, { icon: opt.icon.replace(defaults.heroPointIcon, getIconName()) });
+  foundry.utils.mergeObject(opt, { icon: opt.icon.replace(defaults.HeroPoints.Icon, getIconName()) });
 });
 
 Hooks.on('renderCharacterSheetPF2e', () => {
   const value = getIconName();
 
-  for (const el of document.querySelectorAll(`.sheet.actor.character i.${defaults.heroPointIcon}`)) {
-    el.classList.replace(defaults.heroPointIcon, value);
+  for (const el of document.querySelectorAll(`.sheet.actor.character i.${defaults.HeroPoints.Icon}`)) {
+    el.classList.replace(defaults.HeroPoints.Icon, value);
   }
 });
 
 Hooks.on('renderChatMessage', (message, html) => {
-  html.find(`i.${defaults.heroPointIcon}`).first().removeClass(defaults.heroPointIcon).addClass(getIconName());
+  html.find(`i.${defaults.HeroPoints.Icon}`).first().removeClass(defaults.HeroPoints.Icon).addClass(getIconName());
 });
 
 Hooks.on('renderPF2eHudBaseActor', (html) => {
@@ -73,7 +54,7 @@ Hooks.on('renderPF2eHudBaseActor', (html) => {
 Hooks.once('setup', async () => {
   await Promise.all(
     game.messages.map(async (message) => {
-      if (message.flavor.includes(defaults.heroPointIcon)) {
+      if (message.flavor.includes(defaults.HeroPoints.Icon)) {
         return message.update();
       }
     })
@@ -81,9 +62,9 @@ Hooks.once('setup', async () => {
 });
 
 function applyLabelChanges() {
-  const singular = getLabel('HeroPointLabelSingular');
-  const plural = getLabel('HeroPointLabelPlural');
-  const useAn = game.settings.get(MODULE_ID, 'UseArticleAn');
+  const singular = getLabel('LabelSingular');
+  const plural = getLabel('LabelPlural');
+  const useAn = game.settings.get(MODULE_ID, 'HeroPoints.UseArticleAn');
 
   applyObjectChanges(game.i18n.translations, { singular, plural, useAn });
 }
@@ -92,14 +73,16 @@ function applyObjectChanges(obj, labels) {
   const { singular, plural, useAn } = labels;
 
   return Object.entries(obj).forEach(([k, v]) => {
+    if (k === MODULE_ID) return;
+
     if (typeof v === 'string') {
-      if (v.includes(defaults.HeroPointLabelPlural)) {
-        obj[k] = v.replace(defaults.HeroPointLabelPlural, plural);
-      } else if (v.includes(defaults.HeroPointLabelSingular)) {
-        if (useAn && new RegExp(`a ${defaults.HeroPointLabelSingular}`).test(v)) {
-          obj[k] = v.replace(`a ${defaults.HeroPointLabelSingular}`, `an ${singular}`);
+      if (v.includes(defaults.HeroPoints.LabelPlural)) {
+        obj[k] = v.replace(defaults.HeroPoints.LabelPlural, plural);
+      } else if (v.includes(defaults.HeroPoints.LabelSingular)) {
+        if (useAn && new RegExp(`a ${defaults.HeroPoints.LabelSingular}`).test(v)) {
+          obj[k] = v.replace(`a ${defaults.HeroPoints.LabelSingular}`, `an ${singular}`);
         } else {
-          obj[k] = v.replace(defaults.HeroPointLabelSingular, singular);
+          obj[k] = v.replace(defaults.HeroPoints.LabelSingular, singular);
         }
       }
     } else {
@@ -109,7 +92,7 @@ function applyObjectChanges(obj, labels) {
 }
 
 function getIconName() {
-  let value = game.settings.get(MODULE_ID, 'HeroPointIcon');
+  let value = game.settings.get(MODULE_ID, 'HeroPoints.Icon');
 
   if (!value) value = defaults.heroPointIcon;
   else if (!value.startsWith('fa-')) value = `fa-${value}`;
@@ -118,14 +101,19 @@ function getIconName() {
 }
 
 function getLabel(key) {
-  const value = game.settings.get(MODULE_ID, key);
+  const mythic = game.pf2e.settings.campaign.mythic !== 'disabled';
+  let value;
 
-  if (!value) return defaults[key];
+  if (mythic) {
+    value = game.settings.get(MODULE_ID, `HeroPoints.${key}`) ?? defaults.MythicPoints[key];
+  } else {
+    value = game.settings.get(MODULE_ID, `HeroPoints.${key}`) ?? defaults.HeroPoints[key];
+  }
 
   return value;
 }
 
 function loadDefaults() {
-  defaults.HeroPointLabelSingular = game.i18n.translations[MODULE_ID].HeroPointLabelSingular;
-  defaults.HeroPointLabelPlural = game.i18n.translations[MODULE_ID].HeroPointLabelPlural;
+  defaults.HeroPoints.LabelSingular = game.i18n.translations[MODULE_ID].Defaults.Hero.LabelSingular;
+  defaults.HeroPoints.LabelPlural = game.i18n.translations[MODULE_ID].Defaults.Hero.LabelPlural;
 }
