@@ -53,18 +53,16 @@ export class HeroPointSettings extends FormApplication {
       LabelSingular: {
         name: `${MODULE_ID}.Settings.Hero.SingularName`,
         hint: `${MODULE_ID}.Settings.Hero.SingularHint`,
-        default: `${MODULE_ID}.Defaults.Hero.LabelSingular`,
+        default: game.i18n.localize(`${MODULE_ID}.Defaults.Hero.LabelSingular`),
         config: false,
-        // requiresReload: true,
         scope: 'world',
         type: String
       },
       LabelPlural: {
         name: `${MODULE_ID}.Settings.Hero.PluralName`,
         hint: `${MODULE_ID}.Settings.Hero.PluralHint`,
-        default: `${MODULE_ID}.Defaults.Hero.LabelPlural`,
+        default: game.i18n.localize(`${MODULE_ID}.Defaults.Hero.LabelPlural`),
         config: false,
-        // requiresReload: true,
         scope: 'world',
         type: String
       },
@@ -73,7 +71,6 @@ export class HeroPointSettings extends FormApplication {
         hint: `${MODULE_ID}.Settings.Hero.IconHint`,
         default: 'fa-hospital-symbol',
         config: false,
-        // requiresReload: true,
         scope: 'world',
         type: String
       },
@@ -82,7 +79,6 @@ export class HeroPointSettings extends FormApplication {
         hint: `${MODULE_ID}.Settings.Hero.UseAnHint`,
         default: false,
         config: false,
-        // requiresReload: true,
         scope: 'world',
         type: Boolean
       }

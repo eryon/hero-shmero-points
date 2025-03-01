@@ -53,7 +53,7 @@ export class MythicPointSettings extends FormApplication {
       LabelSingular: {
         name: `${MODULE_ID}.Settings.Mythic.SingularName`,
         hint: `${MODULE_ID}.Settings.Mythic.SingularHint`,
-        default: `${MODULE_ID}.Defaults.Mythic.LabelSingular`,
+        default: game.i18n.localize(`${MODULE_ID}.Defaults.Mythic.LabelSingular`),
         config: false,
         scope: 'world',
         type: String
@@ -61,7 +61,7 @@ export class MythicPointSettings extends FormApplication {
       LabelPlural: {
         name: `${MODULE_ID}.Settings.Mythic.PluralName`,
         hint: `${MODULE_ID}.Settings.Mythic.PluralHint`,
-        default: `${MODULE_ID}.Defaults.Mythic.LabelPlural`,
+        default: game.i18n.localize(`${MODULE_ID}.Defaults.Mythic.LabelPlural`),
         config: false,
         scope: 'world',
         type: String

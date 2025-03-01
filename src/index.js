@@ -13,7 +13,9 @@ const defaults = {
   }
 };
 
-Hooks.once('init', () => {
+Hooks.once('ready', async () => applyMigrations());
+
+Hooks.once('i18nInit', () => {
   game.settings.registerMenu(MODULE_ID, 'HeroPoints', {
     name: `${MODULE_ID}.Settings.Hero.MenuName`,
     hint: `${MODULE_ID}.Settings.Hero.MenuHint`,
@@ -33,11 +35,7 @@ Hooks.once('init', () => {
     restricted: true
   });
   MythicPointSettings.registerSettings();
-});
 
-Hooks.once('ready', async () => applyMigrations());
-
-Hooks.once('i18nInit', () => {
   loadDefaults();
   applyLabelChanges();
 });

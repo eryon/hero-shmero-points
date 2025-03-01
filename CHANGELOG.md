@@ -1,5 +1,11 @@
 # Hero Shmero Points Changelog
 
+## 1.0.1 - 2025-03-01
+
+### Fixes
+
+- Fixed localized label defaults in new worlds
+
 ## 1.0.0 - 2025-02-24
 
 ### New Features
