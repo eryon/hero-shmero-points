@@ -1,5 +1,12 @@
 # Hero Shmero Points Changelog
 
+## 2.0.0 - 2025-06-10
+
+### Breaking Changes
+
+- Compatibility verified for FoundryVTT 13.345 and PF2e 7.1.1
+- Deprecated support for older FVTT and system versions
+
 ## 1.0.1 - 2025-03-01
 
 ### Fixes
