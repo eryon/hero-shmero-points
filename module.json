@@ -2,7 +2,7 @@
   "id": "hero-shmero-points",
   "title": "PF2e Hero Shmero Points",
   "description": "A module to customize the name and display of hero points",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "authors": [
     {
       "name": "anathemort",
@@ -11,7 +11,7 @@
   ],
   "compatibility": {
     "minimum": "13",
-    "verified": "13.345"
+    "verified": "13.351"
   },
   "bugs": "https://github.com/eryon/hero-shmero-points/issues",
   "changelog": "https://github.com/eryon/hero-shmero-points/blob/main/CHANGELOG.md",
@@ -33,7 +33,7 @@
       "type": "system",
       "compatibility": {
         "minimum": "7.0.0",
-        "verified": "7.1.1"
+        "verified": "7.10.1"
       }
     }
   },

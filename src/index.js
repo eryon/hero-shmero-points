@@ -13,6 +13,8 @@ const defaults = {
   }
 };
 
+Hooks.once('init', () => CONFIG.debug.hooks = true);
+
 Hooks.once('ready', async () => applyMigrations());
 
 Hooks.once('i18nInit', () => {
@@ -40,7 +42,7 @@ Hooks.once('i18nInit', () => {
   applyLabelChanges();
 });
 
-Hooks.once('getChatLogEntryContext', (html, opts) => {
+Hooks.once('getChatMessageContextOptions', (html, opts) => {
   const opt = opts.find((e) => e.name === 'PF2E.RerollMenu.HeroPoint');
   if (!opt) return;
 
@@ -69,10 +71,14 @@ Hooks.on('renderChatMessage', (message, html) => {
   html.find(`i.${icon}`).first().removeClass(icon).addClass(getIconName());
 });
 
-Hooks.on('renderPF2eHudBaseActor', (html) => {
+Hooks.on('renderBasePF2eHUD', (html) => {
   const mythic = game.pf2e.settings.campaign.mythic !== 'disabled';
   const section = mythic ? 'mythic-points' : 'hero-points';
   const icon = mythic ? 'fa-circle-m' : 'fa-circle-h';
+
+  for (const el of html.element.querySelectorAll(`.pf2e-hud-element .statistics .heroPoints i.${icon}`)) {
+    el.classList.replace(icon, getIconName());
+  }
 
   const el = html.element.querySelector(`div[data-section="${section}"] i.${icon}`);
   el?.classList.replace(icon, getIconName());
