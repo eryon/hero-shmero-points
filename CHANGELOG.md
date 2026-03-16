@@ -1,5 +1,11 @@
 # Hero Shmero Points Changelog
 
+## 3.0.0 - 2026-03-16
+
+### New Features
+
+- Adds support for Starfinder 2E
+
 ## 2.1.0 - 2026-02-20
 
 ### Fixes
