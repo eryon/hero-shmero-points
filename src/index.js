@@ -13,8 +13,6 @@ const defaults = {
   }
 };
 
-Hooks.once('init', () => CONFIG.debug.hooks = true);
-
 Hooks.once('ready', async () => applyMigrations());
 
 Hooks.once('i18nInit', () => {

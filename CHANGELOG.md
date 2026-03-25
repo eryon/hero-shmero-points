@@ -1,5 +1,11 @@
 # Hero Shmero Points Changelog
 
+## 3.0.1 - 2026-03-24
+
+### Fixes
+
+- Removed erroneous debug hooks statement
+
 ## 3.0.0 - 2026-03-16
 
 ### New Features
