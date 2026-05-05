@@ -1,5 +1,11 @@
 # Hero Shmero Points Changelog
 
+## 4.0.0 - 2026-05-05
+
+### New Features
+
+- Updates compatibility with FoundryVTT 14
+
 ## 3.0.1 - 2026-03-24
 
 ### Fixes

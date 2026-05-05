@@ -41,13 +41,18 @@ Hooks.once('i18nInit', () => {
 });
 
 Hooks.once('getChatMessageContextOptions', (html, opts) => {
-  const opt = opts.find((e) => e.name === 'PF2E.RerollMenu.HeroPoint');
+  const mythic = game.pf2e.settings.campaign.mythic !== 'disabled';
+  const opt = opts.find((e) =>
+    mythic
+      ? e.name === 'PF2E.RerollMenu.MythicPoint' || e.label === 'PF2E.RerollMenu.MythicPoint'
+      : e.name === 'PF2E.RerollMenu.HeroPoint' || e.label === 'PF2E.RerollMenu.HeroPoint'
+  );
   if (!opt) return;
 
-  const mythic = game.pf2e.settings.campaign.mythic !== 'disabled';
+  const defaultIcon = mythic ? defaults.MythicPoints.Icon : defaults.HeroPoints.Icon;
 
   foundry.utils.mergeObject(opt, {
-    icon: opt.icon.replace(mythic ? defaults.MythicPoints.Icon : defaults.HeroPoints.Icon, getIconName())
+    icon: opt.icon.replace(new RegExp(`(fa-)?${defaultIcon.substring(3)}`), getIconName())
   });
 });
 
@@ -62,11 +67,11 @@ Hooks.on('renderCharacterSheetPF2e', () => {
   }
 });
 
-Hooks.on('renderChatMessage', (message, html) => {
+Hooks.on('renderChatMessageHTML', (message, html) => {
   const mythic = game.pf2e.settings.campaign.mythic !== 'disabled';
   const icon = mythic ? defaults.MythicPoints.Icon : defaults.HeroPoints.Icon;
 
-  html.find(`i.${icon}`).first().removeClass(icon).addClass(getIconName());
+  html.querySelector(`i.${icon}`)?.classList.replace(icon, getIconName());
 });
 
 Hooks.on('renderBasePF2eHUD', (html) => {
