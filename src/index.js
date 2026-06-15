@@ -6,7 +6,7 @@ export const MODULE_ID = 'hero-shmero-points';
 
 const defaults = {
   HeroPoints: {
-    Icon: 'fa-hospital-symbol'
+    Icon: 'fa-circle-h'
   },
   MythicPoints: {
     Icon: 'fa-circle-m'
@@ -77,7 +77,7 @@ Hooks.on('renderChatMessageHTML', (message, html) => {
 Hooks.on('renderBasePF2eHUD', (html) => {
   const mythic = game.pf2e.settings.campaign.mythic !== 'disabled';
   const section = mythic ? 'mythic-points' : 'hero-points';
-  const icon = mythic ? 'fa-circle-m' : 'fa-circle-h';
+  const icon = mythic ? defaults.MythicPoints.Icon : defaults.HeroPoints.Icon;
 
   for (const el of html.element.querySelectorAll(`.pf2e-hud-element .statistics .heroPoints i.${icon}`)) {
     el.classList.replace(icon, getIconName());

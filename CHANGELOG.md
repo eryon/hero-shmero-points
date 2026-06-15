@@ -1,5 +1,11 @@
 # Hero Shmero Points Changelog
 
+## 4.1.0 - 2026-06-15
+
+### Fixes
+
+- Fixed system compatibility, updated minimum version for string matching
+
 ## 4.0.0 - 2026-05-05
 
 ### New Features

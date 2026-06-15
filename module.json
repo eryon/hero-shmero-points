@@ -2,7 +2,7 @@
   "id": "hero-shmero-points",
   "title": "Hero Shmero Points",
   "description": "A module to customize the name and display of hero points in Pathfinder2E and Starfinder2E",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "authors": [
     {
       "name": "anathemort",
@@ -11,7 +11,7 @@
   ],
   "compatibility": {
     "minimum": "14",
-    "verified": "14.360"
+    "verified": "14.364"
   },
   "bugs": "https://github.com/eryon/hero-shmero-points/issues",
   "changelog": "https://github.com/eryon/hero-shmero-points/blob/main/CHANGELOG.md",
@@ -33,16 +33,16 @@
         "id": "pf2e",
         "type": "system",
         "compatibility": {
-          "minimum": "8.0.0",
-          "verified": "8.11.1"
+          "minimum": "8.2.0",
+          "verified": "8.2.0"
         }
       },
       {
         "id": "sf2e",
         "type": "system",
         "compatibility": {
-          "minimum": "1.0.0.",
-          "verified": "1.1.1"
+          "minimum": "1.2.0",
+          "verified": "1.2.0"
         }
       }
     ]
