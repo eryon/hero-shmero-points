@@ -1,5 +1,11 @@
 # Hero Shmero Points Changelog
 
+## 4.1.1 - 2026-06-15
+
+### New Features
+
+- Adds support for space-separated values, such as using a `fa-brands` icon (#6) 
+
 ## 4.1.0 - 2026-06-15
 
 ### Fixes

@@ -60,10 +60,9 @@ Hooks.on('renderCharacterSheetPF2e', () => {
   const mythic = game.pf2e.settings.campaign.mythic !== 'disabled';
   const icon = mythic ? defaults.MythicPoints.Icon : defaults.HeroPoints.Icon;
   const elements = document.querySelectorAll(`.sheet.actor.character i.${icon}`);
-  const value = getIconName();
 
   for (const el of elements) {
-    el.classList.replace(icon, value);
+    applyCSSReplacement(el);
   }
 });
 
@@ -71,7 +70,7 @@ Hooks.on('renderChatMessageHTML', (message, html) => {
   const mythic = game.pf2e.settings.campaign.mythic !== 'disabled';
   const icon = mythic ? defaults.MythicPoints.Icon : defaults.HeroPoints.Icon;
 
-  html.querySelector(`i.${icon}`)?.classList.replace(icon, getIconName());
+  applyCSSReplacement(html.querySelector(`i.${icon}`));
 });
 
 Hooks.on('renderBasePF2eHUD', (html) => {
@@ -80,11 +79,11 @@ Hooks.on('renderBasePF2eHUD', (html) => {
   const icon = mythic ? defaults.MythicPoints.Icon : defaults.HeroPoints.Icon;
 
   for (const el of html.element.querySelectorAll(`.pf2e-hud-element .statistics .heroPoints i.${icon}`)) {
-    el.classList.replace(icon, getIconName());
+    applyCSSReplacement(el);
   }
 
   const el = html.element.querySelector(`div[data-section="${section}"] i.${icon}`);
-  el?.classList.replace(icon, getIconName());
+  applyCSSReplacement(el);
 });
 
 Hooks.once('setup', async () => {
@@ -96,6 +95,24 @@ Hooks.once('setup', async () => {
     })
   );
 });
+
+/**
+ * Applies the custom icon setting to an element
+ * @param {HTMLElement} el
+ */
+function applyCSSReplacement(el) {
+  if (!el) return;
+
+  let icon = getIconName();
+  const mythic = game.pf2e.settings.campaign.mythic !== 'disabled';
+  if ((mythic && icon === defaults.MythicPoints.Icon) || (!mythic && icon === defaults.HeroPoints.Icon)) return;
+
+  const defaultIcon = mythic ? defaults.MythicPoints.Icon : defaults.HeroPoints.Icon;
+  icon = icon.split(' ');
+
+  el.classList.replace(defaultIcon, icon.at(0));
+  el.classList.add(icon.slice(1));
+}
 
 function applyLabelChanges() {
   applyObjectChanges(game.i18n.translations, {

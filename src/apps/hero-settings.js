@@ -69,7 +69,7 @@ export class HeroPointSettings extends FormApplication {
       Icon: {
         name: `${MODULE_ID}.Settings.Hero.IconName`,
         hint: `${MODULE_ID}.Settings.Hero.IconHint`,
-        default: 'fa-hospital-symbol',
+        default: 'fa-circle-h',
         config: false,
         scope: 'world',
         type: String
