@@ -1,5 +1,11 @@
 # Hero Shmero Points Changelog
 
+## 4.1.2 - 2026-06-17
+
+### Fixes
+
+- Hotfix for applying single value replacements
+
 ## 4.1.1 - 2026-06-15
 
 ### New Features

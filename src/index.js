@@ -111,7 +111,7 @@ function applyCSSReplacement(el) {
   icon = icon.split(' ');
 
   el.classList.replace(defaultIcon, icon.at(0));
-  el.classList.add(icon.slice(1));
+  if (icon.length > 1) el.classList.add(icon.slice(1));
 }
 
 function applyLabelChanges() {
